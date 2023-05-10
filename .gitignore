@@ -159,7 +159,9 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-question-tracker-app/node_modules/
-question-tracker-app/.cache/
-question-tracker-app/public
+*/node_modules/
+*/.cache/
+*/public
+
+.DS_Store
 
