@@ -1,0 +1,29 @@
+CREATE TABLE Questions (
+	'Id' INT(10) NOT NULL  PRIMARY KEY,
+	'QuestionName' VARCHAR(500) NOT NULL,
+	'QuestionURL' VARCHAR(500),
+	'StartDate' DATE NOT NULL,
+	'StartTime' TIME NOT NULL,
+	'EndDate' DATE,
+	'EndTime' TIME,
+	'TotalTimeM' INT,
+	'TotalTimeS' BIGINT);
+
+
+	CREATE TABLE "Description" (
+	"Id"	INTEGER NOT NULL,
+	"Description"	BLOB NOT NULL,
+	"Question"	INTEGER NOT NULL,
+	PRIMARY KEY("Id" AUTOINCREMENT),
+	FOREIGN KEY("Question") REFERENCES "Questions"("Id")
+)
+
+
+
+CREATE TABLE "Solutions" (
+	"ID"	INTEGER NOT NULL,
+	"Solution"	BLOB NOT NULL,
+	"Question"	INTEGER NOT NULL,
+	PRIMARY KEY("ID" AUTOINCREMENT),
+	FOREIGN KEY("Question") REFERENCES "Questions"("Id")
+)

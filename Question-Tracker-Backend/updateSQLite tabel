@@ -1,0 +1,6 @@
+from backend import db
+from backend import app
+app.app_context().push()
+from backend.DbClasses import QuestionsTest
+app.config['SQLALCHEMY_DATABASE_URI']
+db.create_all()
