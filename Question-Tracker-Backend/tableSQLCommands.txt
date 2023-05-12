@@ -10,7 +10,8 @@ CREATE TABLE Questions (
 	'TotalTimeS' BIGINT);
 
 
-	CREATE TABLE "Description" (
+
+CREATE TABLE "Description" (
 	"Id"	INTEGER NOT NULL,
 	"Description"	BLOB NOT NULL,
 	"Question"	INTEGER NOT NULL,
