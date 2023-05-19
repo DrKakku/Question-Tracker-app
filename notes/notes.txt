@@ -28,3 +28,11 @@ CREATE TABLE "Solutions" (
 	PRIMARY KEY("ID" AUTOINCREMENT),
 	FOREIGN KEY("Question") REFERENCES "Questions"("Id")
 )
+
+
+from backend import db
+from backend import app
+app.app_context().push()
+from backend.DbClasses import QuestionsTest
+app.config['SQLALCHEMY_DATABASE_URI']
+db.create_all()
