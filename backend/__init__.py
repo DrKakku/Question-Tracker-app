@@ -1,10 +1,11 @@
 from flask import Flask
-from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
+import os
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:////Users/yashtripathi/Documents/OneDrive/yash docs/Work/CODE/Python/utilites/Question-Tracker-app/Question-Tracker-Backend/backend/database/pythonsqlite.db"
+databaseName = 'pythonsqlite.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:////{os.path.join(os.getcwd(),'backend','database',databaseName)}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)

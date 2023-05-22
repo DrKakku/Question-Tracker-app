@@ -33,7 +33,7 @@ class Questions(db.Model):
 
 class Description (db.Model):
     Id = db.Column(db.Integer, primary_key = True)
-    Description = db.Column(db.Integer, nullable = False) #change the type later to LargeBinary
+    Description = db.Column(db.Text, nullable = False) #change the type later to LargeBinary
     QuestionId = db.Column(db.Integer,db.ForeignKey('questions.Id'))	
 
     def __repr__(self):
@@ -43,7 +43,7 @@ class Description (db.Model):
 
 class Solutions (db.Model):
     Id = db.Column(db.Integer, primary_key = True)
-    Solution = db.Column(db.Integer, nullable = False)
+    Solution = db.Column(db.Text, nullable = False)
     QuestionId = db.Column(db.Integer,db.ForeignKey('questions.Id'))	
     
     def __repr__(self):
