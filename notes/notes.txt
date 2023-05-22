@@ -30,10 +30,12 @@ CREATE TABLE "Solutions" (
 )
 
 
-from backend import db
-from backend import app
+from backend import db,app
 app.app_context().push()
-from backend.DbClasses import 
 app.config['SQLALCHEMY_DATABASE_URI']
 from backend.dbModels import QuestionsTest,Questions as qt,Description as des,Solutions as sol
+from backend.functions import *
+
+x = queryQuestion("questions","all")
+
 db.create_all()

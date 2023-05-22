@@ -1,5 +1,29 @@
 {
     "cSpell.words": [
+        "backref",
         "jsonify"
-    ]
+    ],
+    "touchBar.terminal": true,
+    "terminal.integrated.copyOnSelection": true,
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "terminal.integrated.defaultProfile.linux": "",
+    "task.allowAutomaticTasks": "on",
+    "touchBar.foldAll": true,
+    "touchBar.goToReferences": true,
+    "touchBar.organizeImports": true,
+    "touchBar.scm": false,
+    "touchBar.showActiveFileInExplorer": false,
+    "touchBar.showActivityBar": false,
+    "touchBar.themeToggle": false,
+    "touchBar.toggleZenMode": false,
+    "touchBar.unfoldAll": true,
+    "nasc-touchbar.settings": false,
+    "nasc-touchbar.toggleWhiteSpace": false,
+    "nasc-touchbar.toggleSidebar": false,
+    "nasc-touchbar.showCommands": true,
+    "nasc-touchbar.jumpToBracket": true,
+    "keyboard.touchbar.enabled": true,
+    "cmake.touchbar.visibility": "hidden",
+    "touchBar.showExplorer": true,
+    "touchBar.closeOtherEditors": false
 }

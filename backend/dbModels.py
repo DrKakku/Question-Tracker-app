@@ -1,6 +1,6 @@
-from backend import db
 from datetime import datetime
-from time import time
+
+from backend import db
 
 
 class QuestionsTest(db.Model):
@@ -11,6 +11,7 @@ class QuestionsTest(db.Model):
 
     def __repr__(self):
         return f"<User: {self.name}, Email: {self.email}, id:{self.id}>"
+    
 
 
 class Questions(db.Model):
@@ -28,6 +29,23 @@ class Questions(db.Model):
     Solution =        db.relationship("Solutions",backref="questions")
     def __repr__(self):
         return f"<Id: {self.Id}, QuestionName: {self.QuestionName}, Description:{self.Description}, StartTime:{self.StartTime}>"
+    
+    def toDict(self):
+        dic = {
+            "QuestionName":          self.QuestionName ,
+            "QuestionURL":           self.QuestionURL ,
+            "QuestionStatus":        self.QuestionStatus ,
+            "StartDate":             self.StartDate ,
+            "StartTime":             self.StartTime ,
+            "EndDate":               self.EndDate ,
+            "EndTime":               self.EndTime ,
+            "TotalTimeM":            self.TotalTimeM ,
+            "TotalTimeS":            self.TotalTimeS ,
+            "Description":           self.Description ,
+            "Solution":              self.Solution ,
+            "type":                  "Questions",
+        }
+        return dic
 
 
 
@@ -37,7 +55,17 @@ class Description (db.Model):
     QuestionId = db.Column(db.Integer,db.ForeignKey('questions.Id'))	
 
     def __repr__(self):
-        return f"<Id: {self.Id}, Description: {self.Description}, QuestionId:{self.QuestionId}>"
+        return f"{self.Id}, {self.Description}"
+    
+    def toDict(self):
+        dic = {
+                "Id":                      self.Id  ,
+                "Description":             self.Description  ,
+                "QuestionId ":             self.QuestionId   ,
+                "type":                    "Description",
+
+        }
+        return dic
 
 
 
@@ -47,5 +75,13 @@ class Solutions (db.Model):
     QuestionId = db.Column(db.Integer,db.ForeignKey('questions.Id'))	
     
     def __repr__(self):
-        return f"<Id: {self.Id}, Description: {self.Solution}, QuestionId:{self.QuestionId}>"
+        return f"{self.Id}, {self.Solution}"
 	
+    def toDict(self):
+        dic = {
+                "Id":                      self.Id  ,
+                "Solution":                self.Solution  ,
+                "QuestionId ":             self.QuestionId   ,
+                "type":                    "Solution",
+        }
+        return dic
