@@ -3,7 +3,7 @@ import os
 from flask import jsonify, render_template, request
 
 from backend import app, db
-from backend.functions import addDescription, addQuestion, addSolution,queryQuestion
+from backend.functions import addDescription, addQuestion, addSolution,queryQuestion,jsonifyData
 
 
 @app.route('/')
@@ -12,7 +12,7 @@ def home():
     return render_template('homepage.html',route = os.getcwd())
 
 
-@app.route('/AddQuestion',methods=["POST"])
+@app.route('/addQuestion',methods=["POST"])
 def add_question():
     if request.method == "POST":
 
@@ -38,20 +38,19 @@ def query_question():
         data = request.json
         status = False
         try:
-            queryResult = queryQuestion(modelType = "Questions",queryType = "by", query = "")
-            db.session.add(queryResult)
-            db.session.commit()
+            queryResult = queryQuestion(modelType = data["modelType"],queryType = data["queryType"])
+            # print(queryResult)
             status = True
         except Exception as exception :
-            db.session.rollback()
             print(f"Exception {exception = }")
+            return jsonify(status=status)
         finally:
 
             return jsonify(status=status,data=queryResult)
         
     
 
-@app.route('/AddDescription',methods=["POST"])
+@app.route('/addDescription',methods=["POST"])
 def add_description():
     if request.method == "POST":
 
@@ -71,7 +70,7 @@ def add_description():
         
 
 
-@app.route('/AddSolution',methods=["POST"])
+@app.route('/addSolution',methods=["POST"])
 def add_solution():
     if request.method == "POST":
 

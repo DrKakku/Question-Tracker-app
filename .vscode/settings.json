@@ -1,6 +1,7 @@
 {
     "cSpell.words": [
         "backref",
+        "datapoints",
         "jsonify"
     ],
     "touchBar.terminal": true,
@@ -25,5 +26,9 @@
     "keyboard.touchbar.enabled": true,
     "cmake.touchbar.visibility": "hidden",
     "touchBar.showExplorer": true,
-    "touchBar.closeOtherEditors": false
+    "touchBar.closeOtherEditors": false,
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.autopep8"
+    },
+    "python.formatting.provider": "none"
 }
