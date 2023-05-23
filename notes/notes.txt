@@ -36,6 +36,6 @@ app.config['SQLALCHEMY_DATABASE_URI']
 from backend.dbModels import QuestionsTest,Questions as qt,Description as des,Solutions as sol
 from backend.functions import *
 
-x = queryQuestion("questions","all")
+x = queryQuestion("questions","first")
 
 db.create_all()

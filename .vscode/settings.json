@@ -1,8 +1,13 @@
 {
     "cSpell.words": [
+        "AUTOINCREMENT",
         "backref",
         "datapoints",
-        "jsonify"
+        "jsonify",
+        "pythonsqlite",
+        "sqlalchemy",
+        "utctime",
+        "VARCHAR"
     ],
     "touchBar.terminal": true,
     "terminal.integrated.copyOnSelection": true,

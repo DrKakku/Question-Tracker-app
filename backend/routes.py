@@ -3,16 +3,16 @@ import os
 from flask import jsonify, render_template, request
 
 from backend import app, db
-from backend.functions import addDescription, addQuestion, addSolution,queryQuestion,jsonifyData
+from backend.functions import addDescription, addQuestion, addSolution, queryQuestion, deleteQuestion
 
 
 @app.route('/')
 @app.route('/home')
 def home():
-    return render_template('homepage.html',route = os.getcwd())
+    return render_template('homepage.html', route=os.getcwd())
 
 
-@app.route('/addQuestion',methods=["POST"])
+@app.route('/addQuestion', methods=["POST"])
 def add_question():
     if request.method == "POST":
 
@@ -23,34 +23,51 @@ def add_question():
             db.session.add(dataPoint)
             db.session.commit()
             status = True
-        except Exception as exception :
+        except Exception as exception:
             db.session.rollback()
             print(f"Exception {exception = }")
         finally:
 
-            return jsonify(status=status,Id=dataPoint.Id)
+            return jsonify(status=status, Id=dataPoint.Id)
         
+@app.route('/delQuestion', methods=["POST"])
+def del_question():
+    if request.method == "POST":
 
-@app.route('/queryQuestion',methods=["POST"])
+        data = request.json
+        status = False
+        try:
+            print(data)
+            status = deleteQuestion(**data) #this needs model type and query based on which we are selecting the items to be deleted
+
+        except Exception as exception:
+            db.session.rollback()
+            print(f"Exception {exception = }")
+        finally:
+
+            return jsonify(status=status)
+
+
+@app.route('/queryQuestion', methods=["POST"])
 def query_question():
     if request.method == "POST":
 
         data = request.json
         status = False
         try:
-            queryResult = queryQuestion(modelType = data["modelType"],queryType = data["queryType"])
+            queryResult = queryQuestion(
+                modelType=data["modelType"], queryType=data["queryType"])
             # print(queryResult)
             status = True
-        except Exception as exception :
+        except Exception as exception:
             print(f"Exception {exception = }")
             return jsonify(status=status)
         finally:
 
-            return jsonify(status=status,data=queryResult)
-        
-    
+            return jsonify(status=status, data=queryResult)
 
-@app.route('/addDescription',methods=["POST"])
+
+@app.route('/addDescription', methods=["POST"])
 def add_description():
     if request.method == "POST":
 
@@ -61,16 +78,15 @@ def add_description():
             db.session.add(dataPoint)
             db.session.commit()
             status = True
-        except Exception as exception :
+        except Exception as exception:
             db.session.rollback()
             print(f"Exception {exception = }")
         finally:
 
-            return jsonify(status=status,Id=dataPoint.Id)
-        
+            return jsonify(status=status, Id=dataPoint.Id)
 
 
-@app.route('/addSolution',methods=["POST"])
+@app.route('/addSolution', methods=["POST"])
 def add_solution():
     if request.method == "POST":
 
@@ -81,19 +97,17 @@ def add_solution():
             db.session.add(dataPoint)
             db.session.commit()
             status = True
-        except Exception as exception :
+        except Exception as exception:
             db.session.rollback()
             print(f"Exception {exception = }")
         finally:
 
-            return jsonify(status=status,Id=dataPoint.Id)
-        
+            return jsonify(status=status, Id=dataPoint.Id)
 
 
-
-@app.route('/classify',methods=["POST"])
+@app.route('/classify', methods=["POST"])
 def classifyApi():
     if request.method == "POST":
         # data = request.args['data']
-        
-        return jsonify({"pred" : True,"data" : True})
+
+        return jsonify({"pred": True, "data": True})
