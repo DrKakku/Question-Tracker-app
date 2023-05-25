@@ -6,6 +6,10 @@ This file contains all the functions that can / will be used within the routes
 from backend.dbModels import *
 from backend.supportingFunctions import *
 
+import cProfile
+import pstats
+
+import os
 
 def addQuestion(data: dict):
     return Questions(**data)
@@ -54,7 +58,7 @@ def queryQuestion(modelType: list[str], queryType: list[str], query: list[dict] 
 
     queryDict = {"all": query_all,
                  "first": query_first,
-                 # "filterBy": query_filterBy,
+                 "filterBy": query_filterBy,
                  # "filter": query_filter
                  }
 
@@ -107,3 +111,15 @@ def deleteQuestion(modelType:db.Model,**Query):
             print(e)
             
         return {"status":status}
+    
+def profileDump(func):
+    def profiler(*args,**kwargs):
+        print("profilled")
+        with cProfile.Profile() as profile:
+            opt = func(*args,**kwargs)
+        results = pstats.Stats(profile)
+        results.sort_stats(pstats.SortKey.TIME)
+        results.dump_stats(os.path.join("profilerDump",f"{func.__name__}.pstats") )
+        return(opt)
+    profiler.__name__ = func.__name__
+    return profiler

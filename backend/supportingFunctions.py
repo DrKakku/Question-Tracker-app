@@ -25,6 +25,7 @@ def query_first(modelType: db.Model, **kwargs):
 def query_filterBy(modelType: db.Model, **query):
     try:
         result = modelType.query.filter_by(**query).one_or_none()
+        print(result)
         return result
 
     except Exception as e:

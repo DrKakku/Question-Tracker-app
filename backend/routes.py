@@ -1,18 +1,21 @@
 import os
 
 from flask import jsonify, render_template, request
-
+from flask_cors import cross_origin
 from backend import app, db
-from backend.functions import addDescription, addQuestion, addSolution, queryQuestion, deleteQuestion
+from backend.functions import addDescription, addQuestion, addSolution, queryQuestion, deleteQuestion,profileDump
+
 
 
 @app.route('/')
 @app.route('/home')
+@cross_origin(origin='*')
 def home():
     return render_template('homepage.html', route=os.getcwd())
 
 
 @app.route('/addQuestion', methods=["POST"])
+@cross_origin(origin='*')
 def add_question():
     if request.method == "POST":
 
@@ -31,11 +34,13 @@ def add_question():
             return jsonify(status=status, Id=dataPoint.Id)
         
 @app.route('/delQuestion', methods=["POST"])
+@cross_origin(origin='*')
 def del_question():
     if request.method == "POST":
 
         data = request.json
         status = False
+        print("entered")
         try:
             print(data)
             status = deleteQuestion(**data) #this needs model type and query based on which we are selecting the items to be deleted
@@ -49,6 +54,7 @@ def del_question():
 
 
 @app.route('/queryQuestion', methods=["POST"])
+# @profileDump
 def query_question():
     if request.method == "POST":
 
@@ -68,6 +74,7 @@ def query_question():
 
 
 @app.route('/addDescription', methods=["POST"])
+@profileDump
 def add_description():
     if request.method == "POST":
 
@@ -87,6 +94,7 @@ def add_description():
 
 
 @app.route('/addSolution', methods=["POST"])
+@profileDump
 def add_solution():
     if request.method == "POST":
 
@@ -106,6 +114,7 @@ def add_solution():
 
 
 @app.route('/classify', methods=["POST"])
+@profileDump
 def classifyApi():
     if request.method == "POST":
         # data = request.args['data']
