@@ -10,6 +10,9 @@ import cProfile
 import pstats
 
 import os
+from datetime import datetime
+from pytz import timezone
+
 
 def addQuestion(data: dict):
     return Questions(**data)
@@ -123,3 +126,35 @@ def profileDump(func):
         return(opt)
     profiler.__name__ = func.__name__
     return profiler
+
+def preprocessInputData(data):
+    
+    print(data)
+
+    try:
+        tempData = {"QuestionName":"TempN1ame","QuestionURL":"tempURL"}
+        print(data["startDateTime"])
+        print("Enter here")
+        if data["StartDate"] and data["StartTime"] and data["startDateTime"] :
+            startTimeObj = datetime.fromtimestamp(int(data["startDateTime"]/1000))
+            startTimeObj = startTimeObj.astimezone(timezone('Asia/Kolkata'))
+            data["StartDate"]     = startTimeObj.date()
+            data["StartTime"]     = startTimeObj.time()
+            print("Enter if 1")
+
+        
+        if data["EndDate"] and data["EndTime"] and data["endDateTime"] :
+            endTimeObj = datetime.fromtimestamp(int(data["endDateTime"]/1000))
+            endTimeObj = endTimeObj.astimezone(timezone('Asia/Kolkata'))
+            data["EndDate"]     = endTimeObj.date()
+            data["EndTime"]     = endTimeObj.time()            
+            print("Enter if 2")
+
+        del data["endDateTime"]
+        del data["startDateTime"]
+            
+    except Exception as e:
+        print(e)
+        raise(e)
+
+    return data

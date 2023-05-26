@@ -3,7 +3,7 @@ import os
 from flask import jsonify, render_template, request
 from flask_cors import cross_origin
 from backend import app, db
-from backend.functions import addDescription, addQuestion, addSolution, queryQuestion, deleteQuestion,profileDump
+from backend.functions import addDescription, addQuestion, addSolution, queryQuestion, deleteQuestion,profileDump,preprocessInputData
 
 
 
@@ -22,16 +22,18 @@ def add_question():
         data = request.json
         status = False
         try:
-            dataPoint = addQuestion(data["data"])
+            QuestionData = preprocessInputData(data["data"])
+            dataPoint = addQuestion(QuestionData)
             db.session.add(dataPoint)
             db.session.commit()
+            print(dataPoint)
             status = True
         except Exception as exception:
             db.session.rollback()
-            print(f"Exception {exception = }")
+            print(f"Exception in addQuestion {exception = }")
         finally:
 
-            return jsonify(status=status, Id=dataPoint.Id)
+            return jsonify(status=status)
         
 @app.route('/delQuestion', methods=["POST"])
 @cross_origin(origin='*')
