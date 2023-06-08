@@ -60,18 +60,18 @@ def del_question():
 def query_question():
     if request.method == "POST":
 
-        data = request.json
+        data :dict = request.json
         status = False
         try:
+            
             queryResult = queryQuestion(
-                modelType=data["modelType"], queryType=data["queryType"])
-            # print(queryResult)
+                    modelType=data.pop("modelType"), queryType=data.pop("queryType"),query=data.get("query",{}))
+            print(queryResult)
             status = True
         except Exception as exception:
             print(f"Exception {exception = }")
             return jsonify(status=status)
         finally:
-
             return jsonify(status=status, data=queryResult)
 
 

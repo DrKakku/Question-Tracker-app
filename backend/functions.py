@@ -78,6 +78,7 @@ def queryQuestion(modelType: list[str], queryType: list[str], query: list[dict] 
     for queries in query:
         for model in modelType:
             for type in queryType:
+                print(f"{queries = }, {query = } , {type = }")
                 res = queryDict[type](modelDict[model], **queries)
                 if res:
                     res = [elements.toDict() for elements in res]
