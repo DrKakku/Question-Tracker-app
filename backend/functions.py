@@ -26,7 +26,7 @@ def addSolution(data: dict, question: db.Model):
     return Solutions(**data, questions=question)
 
 
-def queryQuestion(modelType: list[str], queryType: list[str], query: list[dict] = {"id":  1}, **kwargs):
+def queryQuestion(modelType: list[str], queryType: list[str], query: list[dict] = {"id":  1},toDict = True , **kwargs):
     """
     Dynamic Querying for all the class models that we have in the database
     it will search through any of the models using the keywords 
@@ -47,6 +47,8 @@ def queryQuestion(modelType: list[str], queryType: list[str], query: list[dict] 
                 - all: THis queries all the available datapoints for the class 
 
                 - first: This return the first item in the class 
+                
+                -filterBy: gets one or none item based on the query string passed should be in the same format expected by the function
 
 
 
@@ -64,30 +66,37 @@ def queryQuestion(modelType: list[str], queryType: list[str], query: list[dict] 
                  "filterBy": query_filterBy,
                  # "filter": query_filter
                  }
+    try:
+        # converting to lists if not already a list
+        if not isinstance(query, list):
+            query = [query]
+        if not isinstance(modelType, list):
+            modelType = [modelType]
+        if not isinstance(queryType, list):
+            queryType = [queryType]
 
-    # converting to lists if not already a list
-    if not isinstance(query, list):
-        query = [query]
-    if not isinstance(modelType, list):
-        modelType = [modelType]
-    if not isinstance(queryType, list):
-        queryType = [queryType]
+        resultArr = []
 
-    resultArr = []
-
-    for queries in query:
-        for model in modelType:
-            for type in queryType:
-                print(f"{queries = }, {query = } , {type = }")
-                res = queryDict[type](modelDict[model], **queries)
-                if res:
-                    res = [elements.toDict() for elements in res]
-                    for i in res:
-                        calculateUTC(i)
-                    resultArr.append(res)
-    if len(resultArr) == 1:
-        resultArr = resultArr[0]
-    return resultArr
+        for queries in query:
+            for model in modelType:
+                for type in queryType:
+                    print(f"{queries = }, {query = } , {type = }")
+                    res = queryDict[type](modelDict[model], **queries)
+                    
+                    if res:
+                        if toDict:
+                            res = [elements.toDict() for elements in res]
+                            for i in res:
+                                calculateUTC(i)
+                        resultArr= resultArr + res
+        # print(f"{resultArr = }")
+        if len(resultArr) == 1:
+            resultArr = resultArr[0]
+        return resultArr
+    except Exception as e:
+        print(f"Query Question {e = }")
+    
+    return None 
 
 
 def jsonifyData(data):
@@ -150,7 +159,7 @@ def preprocessInputData(data:dict):
             endTimeObj = endTimeObj.astimezone(timezone('Asia/Kolkata'))
             data["EndDate"]     = endTimeObj.date()
             data["EndTime"]     = endTimeObj.time()            
-            # print("Enter if 2")
+            # print("Enter if 2")         
 
         del data["endDateTime"]
         del data["startDateTime"]
@@ -160,3 +169,23 @@ def preprocessInputData(data:dict):
         raise(e)
 
     return data
+
+
+
+def updateQuestion(questionObj:db.Model,updateData:dict)->db.Model | bool:
+    status = False
+    try:
+        # print(f"{questionObj = }  \n\n\n {updateData = }" )
+        for fieldName,fieldValue in updateData.items():
+            print(f"{fieldName = }, {fieldValue = }")
+            setattr(questionObj,fieldName,fieldValue)
+        print(questionObj)
+        status = True
+        return questionObj , status
+    except Exception as e:
+        print(f"update Question {e = }")
+    
+    return status
+        
+        
+        

@@ -3,7 +3,7 @@ import os
 from flask import jsonify, render_template, request
 from flask_cors import cross_origin
 from backend import app, db
-from backend.functions import addDescription, addQuestion, addSolution, queryQuestion, deleteQuestion,profileDump,preprocessInputData
+from backend.functions import addDescription, addQuestion,updateQuestion , addSolution, queryQuestion, deleteQuestion,profileDump,preprocessInputData
 
 
 
@@ -57,14 +57,18 @@ def del_question():
         
 @app.route('/updateQuestion', methods=["POST"])
 @cross_origin(origin='*')
-def updateQuestion():
+def update_Question():
     if request.method == "POST":
 
-        data = request.json
+        data :dict = request.json
         status = False
         try:
+            print(1)
             QuestionData = preprocessInputData(data["data"])
-            dataPoint = addQuestion(QuestionData)
+            print(2)
+            queryResult = queryQuestion(
+                    modelType="questions", queryType="filterBy",query={"Id":QuestionData.get("Id",None)},toDict=False)
+            dataPoint,_ = updateQuestion(queryResult,QuestionData)
             db.session.add(dataPoint)
             db.session.commit()
             print(dataPoint)
@@ -88,7 +92,7 @@ def query_question():
             
             queryResult = queryQuestion(
                     modelType=data.pop("modelType"), queryType=data.pop("queryType"),query=data.get("query",{}))
-            # print(queryResult)
+            print(f"{queryResult = }")
             status = True
         except Exception as exception:
             print(f"Exception {exception = }")
