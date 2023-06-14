@@ -53,6 +53,28 @@ def del_question():
         finally:
 
             return jsonify(status=status)
+        
+        
+@app.route('/updateQuestion', methods=["POST"])
+@cross_origin(origin='*')
+def updateQuestion():
+    if request.method == "POST":
+
+        data = request.json
+        status = False
+        try:
+            QuestionData = preprocessInputData(data["data"])
+            dataPoint = addQuestion(QuestionData)
+            db.session.add(dataPoint)
+            db.session.commit()
+            print(dataPoint)
+            status = True
+        except Exception as exception:
+            db.session.rollback()
+            print(f"Exception in UpdateQuestion {exception = }")
+        finally:
+
+            return jsonify(status=status)
 
 
 @app.route('/queryQuestion', methods=["POST"])
@@ -66,7 +88,7 @@ def query_question():
             
             queryResult = queryQuestion(
                     modelType=data.pop("modelType"), queryType=data.pop("queryType"),query=data.get("query",{}))
-            print(queryResult)
+            # print(queryResult)
             status = True
         except Exception as exception:
             print(f"Exception {exception = }")
