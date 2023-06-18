@@ -13,3 +13,5 @@ db = SQLAlchemy(app)
 # connectDb("./backend/database/pythonsqlite.db")
 
 from backend import routes
+
+

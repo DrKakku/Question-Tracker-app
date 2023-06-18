@@ -3,7 +3,7 @@ import os
 from flask import jsonify, render_template, request
 from flask_cors import cross_origin
 from backend import app, db
-from backend.functions import addDescription, addQuestion,updateQuestion , addSolution, queryQuestion, deleteQuestion,profileDump,preprocessInputData
+from backend.functions import manageDependencies, addDescription, addQuestion,updateQuestion , addSolution, queryQuestion, deleteQuestion,profileDump,preprocessInputData
 
 
 
@@ -22,11 +22,13 @@ def add_question():
         data = request.json
         status = False
         try:
-            QuestionData = preprocessInputData(data["data"])
-            dataPoint = addQuestion(QuestionData)
+            QuestionData ,_,_= preprocessInputData(data["data"])
+            # print(f"{QuestionData = }")
+            dataPoint = addQuestion(data=QuestionData)
+            print(dataPoint)
             db.session.add(dataPoint)
             db.session.commit()
-            print(dataPoint)
+            # print(dataPoint)
             status = True
         except Exception as exception:
             db.session.rollback()
@@ -42,9 +44,9 @@ def del_question():
 
         data = request.json
         status = False
-        print("entered")
+        # print("entered")
         try:
-            print(data)
+            # print(data)
             status = deleteQuestion(**data) #this needs model type and query based on which we are selecting the items to be deleted
 
         except Exception as exception:
@@ -63,15 +65,20 @@ def update_Question():
         data :dict = request.json
         status = False
         try:
-            print(1)
-            QuestionData = preprocessInputData(data["data"])
-            print(2)
+            # print(1)
+            QuestionData,DescriptionData,SolutionData = preprocessInputData(data["data"])
+            # print(2)
+
             queryResult = queryQuestion(
                     modelType="questions", queryType="filterBy",query={"Id":QuestionData.get("Id",None)},toDict=False)
+            
+            manageDependencies(queryResult,DescriptionData,SolutionData)
+            
             dataPoint,_ = updateQuestion(queryResult,QuestionData)
+
             db.session.add(dataPoint)
             db.session.commit()
-            print(dataPoint)
+            # print(dataPoint)
             status = True
         except Exception as exception:
             db.session.rollback()
@@ -92,7 +99,11 @@ def query_question():
             
             queryResult = queryQuestion(
                     modelType=data.pop("modelType"), queryType=data.pop("queryType"),query=data.get("query",{}))
-            print(f"{queryResult = }")
+            # print(f"{queryResult = }")
+
+            queryResult = [queryResult] if type(queryResult) != list else queryResult
+            
+            
             status = True
         except Exception as exception:
             print(f"Exception {exception = }")

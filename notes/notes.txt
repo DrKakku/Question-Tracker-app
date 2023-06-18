@@ -38,4 +38,16 @@ from backend.functions import *
 
 x = queryQuestion("questions","first")
 
+desArr = []
+for i in range(10):
+	x.Description.append(des(Description=str(i)*10))
+
+x.Description.remove(desArr)
+
+
+
 db.create_all()
+
+
+
+5.1
