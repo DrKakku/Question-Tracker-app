@@ -1,7 +1,6 @@
 import os
 
 from flask import jsonify, render_template, request
-from flask_cors import cross_origin
 from backend import app, db
 from backend.functions import addDescription, addQuestion,updateQuestion , addSolution, queryQuestion, deleteQuestion,profileDump,preprocessInputData
 
@@ -9,13 +8,11 @@ from backend.functions import addDescription, addQuestion,updateQuestion , addSo
 
 @app.route('/')
 @app.route('/home')
-@cross_origin(origin='*')
 def home():
     return render_template('homepage.html', route=os.getcwd())
 
 
 @app.route('/addQuestion', methods=["POST"])
-@cross_origin(origin='*')
 def add_question():
     if request.method == "POST":
 
@@ -36,7 +33,6 @@ def add_question():
             return jsonify(status=status)
         
 @app.route('/delQuestion', methods=["POST"])
-@cross_origin(origin='*')
 def del_question():
     if request.method == "POST":
 
@@ -56,7 +52,6 @@ def del_question():
         
         
 @app.route('/updateQuestion', methods=["POST"])
-@cross_origin(origin='*')
 def update_Question():
     if request.method == "POST":
 
@@ -82,7 +77,6 @@ def update_Question():
 
 
 @app.route('/queryQuestion', methods=["POST"])
-# @profileDump
 def query_question():
     if request.method == "POST":
 
@@ -100,51 +94,3 @@ def query_question():
         finally:
             return jsonify(status=status, data=queryResult)
 
-
-@app.route('/addDescription', methods=["POST"])
-@profileDump
-def add_description():
-    if request.method == "POST":
-
-        data = request.json
-        status = False
-        try:
-            dataPoint = addDescription(data["data"])
-            db.session.add(dataPoint)
-            db.session.commit()
-            status = True
-        except Exception as exception:
-            db.session.rollback()
-            print(f"Exception {exception = }")
-        finally:
-
-            return jsonify(status=status, Id=dataPoint.Id)
-
-
-@app.route('/addSolution', methods=["POST"])
-@profileDump
-def add_solution():
-    if request.method == "POST":
-
-        data = request.json
-        status = False
-        try:
-            dataPoint = addSolution(data["data"])
-            db.session.add(dataPoint)
-            db.session.commit()
-            status = True
-        except Exception as exception:
-            db.session.rollback()
-            print(f"Exception {exception = }")
-        finally:
-
-            return jsonify(status=status, Id=dataPoint.Id)
-
-
-@app.route('/classify', methods=["POST"])
-@profileDump
-def classifyApi():
-    if request.method == "POST":
-        # data = request.args['data']
-
-        return jsonify({"pred": True, "data": True})

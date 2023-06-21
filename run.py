@@ -2,7 +2,6 @@
 Run a test server.
 Its only job is to start the module nothing else
 """
-
 from backend import app
 from flask_cors import CORS
 
