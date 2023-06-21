@@ -15,6 +15,7 @@ from pytz import timezone
 
 
 def addQuestion(data: dict):
+    print(data)
     return Questions(**data)
 
 
@@ -80,7 +81,7 @@ def queryQuestion(modelType: list[str], queryType: list[str], query: list[dict] 
         for queries in query:
             for model in modelType:
                 for type in queryType:
-                    print(f"{queries = }, {query = } , {type = }")
+                    # print(f"{queries = }, {query = } , {type = }")
                     res = queryDict[type](modelDict[model], **queries)
                     
                     if res:
@@ -99,9 +100,9 @@ def queryQuestion(modelType: list[str], queryType: list[str], query: list[dict] 
     return None 
 
 
-def jsonifyData(data):
-    for i in data[0]:
-        print(i)
+# def jsonifyData(data):
+#     for i in data[0]:
+#         # print(i)
         
         
 def deleteQuestion(modelType:db.Model,**Query):
@@ -114,7 +115,7 @@ def deleteQuestion(modelType:db.Model,**Query):
                     "description": Description,
                     "solutions": Solutions}
     delElement = query_filterBy(modelDict[modelType],**Query)
-    print(type(delElement))
+    # print(type(delElement))
     status = False
     if delElement:
         try :
@@ -129,7 +130,7 @@ def deleteQuestion(modelType:db.Model,**Query):
     
 def profileDump(func):
     def profiler(*args,**kwargs):
-        print("profilled")
+        # print("profilled")
         with cProfile.Profile() as profile:
             opt = func(*args,**kwargs)
         results = pstats.Stats(profile)
@@ -139,7 +140,7 @@ def profileDump(func):
     profiler.__name__ = func.__name__
     return profiler
 
-def preprocessInputData(data:dict):
+def preprocessInputData(data:dict)->tuple[dict,list,list]:
     
     # print(data)
 
@@ -163,23 +164,27 @@ def preprocessInputData(data:dict):
 
         del data["endDateTime"]
         del data["startDateTime"]
+
+        DescriptionData = data.pop("Description",[])
+        SolutionData = data.pop("Solution",[])
             
     except Exception as e:
-        print(e)
+        print(f"Preprocess Input data {e = }")
         raise(e)
+    
 
-    return data
+    return data , DescriptionData, SolutionData
 
 
 
-def updateQuestion(questionObj:db.Model,updateData:dict)->db.Model | bool:
+def updateQuestion(questionObj:db.Model,updateData:dict)->db.Model :
     status = False
     try:
         # print(f"{questionObj = }  \n\n\n {updateData = }" )
         for fieldName,fieldValue in updateData.items():
-            print(f"{fieldName = }, {fieldValue = }")
+            # print(f"{fieldName = }, {fieldValue = }")
             setattr(questionObj,fieldName,fieldValue)
-        print(questionObj)
+        # print(questionObj)
         status = True
         return questionObj , status
     except Exception as e:
@@ -187,5 +192,31 @@ def updateQuestion(questionObj:db.Model,updateData:dict)->db.Model | bool:
     
     return status
         
-        
-        
+
+def manageDependencies (QuestionObj,DescriptionData,SolutionData):
+
+    #description management
+
+    allDes = QuestionObj.Description.copy()
+    for des in allDes:
+        if len(des.Description) > 0:
+            QuestionObj.Description.remove(des)
+    del allDes
+    
+    for des in DescriptionData:
+        QuestionObj.Description.append(Description(Description=des))
+
+
+    
+    allSol = QuestionObj.Solution.copy()
+    for sol in allSol:
+        if len(sol.Solution) > 0:
+            QuestionObj.Solution.remove(sol)
+    del allSol
+
+    for sol in SolutionData:
+        QuestionObj.Solution.append(Solutions(Solution=sol))
+
+
+
+
