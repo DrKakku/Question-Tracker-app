@@ -10,7 +10,7 @@ def query_all(modelType: db.Model, **kwargs):
         return result
 
     except Exception as e:
-        pass
+        print(f"Exception in query all {e = }")
 
 
 def query_first(modelType: db.Model, **kwargs):
@@ -19,7 +19,7 @@ def query_first(modelType: db.Model, **kwargs):
         return [result]
 
     except Exception as e:
-        pass
+        print(f"Exception in filterFirst {e = }")
 
 
 def query_filterBy(modelType: db.Model, **query):
@@ -30,12 +30,12 @@ def query_filterBy(modelType: db.Model, **query):
         return [result]
 
     except Exception as e:
-        pass
+        print(f"Exception in filterBy {e = }")
 
 
 def query_filter(modelType: db.Model, **kwargs):
     """this is a supporting function which should be able to perform filter search on SqlAlchemy model class using a query string
-        More work is needed for this     
+        More work is needed for this
 
     Args:
         modelType (): this will be the SqlAlchemy model upon which the search will be performed
@@ -45,7 +45,7 @@ def query_filter(modelType: db.Model, **kwargs):
         pass
 
     except Exception as e:
-        pass
+        print(f"Exception in QueryFilter {e = }")
 
 
 def calculateUTC(i):

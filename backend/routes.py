@@ -9,6 +9,8 @@ from backend.functions import manageDependencies, addDescription, addQuestion,up
 @app.route('/')
 @app.route('/home')
 def home():
+    # print(app.config['SQLALCHEMY_DATABASE_URI'])
+    # print(os.system("pwd"))
     return render_template('homepage.html', route=os.getcwd())
 
 
@@ -33,7 +35,7 @@ def add_question():
         finally:
 
             return jsonify(status=status)
-        
+
 @app.route('/delQuestion', methods=["POST"])
 def del_question():
     if request.method == "POST":
@@ -51,8 +53,8 @@ def del_question():
         finally:
 
             return jsonify(status=status)
-        
-        
+
+
 @app.route('/updateQuestion', methods=["POST"])
 def update_Question():
     if request.method == "POST":
@@ -66,9 +68,9 @@ def update_Question():
 
             queryResult = queryQuestion(
                     modelType="questions", queryType="filterBy",query={"Id":QuestionData.get("Id",None)},toDict=False)
-            
+
             manageDependencies(queryResult,DescriptionData,SolutionData)
-            
+
             dataPoint,_ = updateQuestion(queryResult,QuestionData)
 
             db.session.add(dataPoint)
@@ -90,14 +92,14 @@ def query_question():
         data :dict = request.json
         status = False
         try:
-            
+
             queryResult = queryQuestion(
                     modelType=data.pop("modelType"), queryType=data.pop("queryType"),query=data.get("query",{}))
             # print(f"{queryResult = }")
 
             queryResult = [queryResult] if type(queryResult) != list else queryResult
-            
-            
+
+
             status = True
         except Exception as exception:
             print(f"Exception {exception = }")
